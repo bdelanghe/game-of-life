@@ -1,7 +1,10 @@
 """"CONWAY GAME OF LIFE"""
 
 from cmd import Cmd
-from typing import List
+from typing import List, Optional, Dict
+from random import sample
+from itertools import product
+
 
 
 class Play(Cmd):
@@ -33,6 +36,8 @@ class World:
 
     def __init__(self, size):
         self.size: int = size
+        self.rules: object = Rules()
+        self._grid: Optional[Dict[tuple, int]] = None
 
     def __str__(self):
         pass
@@ -40,23 +45,44 @@ class World:
     def __repr__(self):
         pass
 
-    def make_grid(self) -> List[list]:
-        line = [0 for _ in range(self.size)]
-        return [list(line) for _ in range(self.size)]
+    @property
+    def grid(self) -> Optional[Dict[tuple, int]]:
+        return self._grid
 
-    def update_grid(self) -> int:
-        pass
+    @grid.setter
+    def grid(self, value: Optional[int]):
+        g = {}
+        for cord in list(product(range(self.size),range(self.size))):
+            g[cord] = 0
+        if value is not None:
+            live = sample(g.keys(), value)
+            for cord in live:
+                g[cord] = 1
+        self._grid = g
 
-    def get_world(self):
-        pass
+    def update_grid(self, cell: tuple, value: int) -> None:
+        self.grid[cell] = value
+
+    def __str__(self):
+        output = ""
+        for i, v in enumerate(list(self.grid.values())):
+            if i % self.size == 0:
+                output +="\n"
+            output += str(v) + " "
+        return output
+
 
 class Rules:
+    """Rules object to """
+
+    def __init__(self) -> None:
+        pass
 
 
+world = World(4)
+world.grid = 5
+print(world)
+# print(world.grid)
 
-
-world = World(3)
-
-print(world.grid)
 
 
